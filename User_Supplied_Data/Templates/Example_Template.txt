@@ -1,0 +1,1 @@
+Tell me a joke about INSERT JOKE TOPIC. Please make sure the joke is at least INSERT NUMERICAL CHARACTER LENGTH FOR JOKE characters long.
