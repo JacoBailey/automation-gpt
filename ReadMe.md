@@ -35,12 +35,7 @@ Installation
     2. Unzip the file.
     3. Open Terminal/Powershell/etc. and run the following command(s) within the "...":
 
-        " pip3 install pyperclip ssl re os json time pyinputplus pathlib selenium undetected_chromedriver "
-        
-        ALSO INSTALL THE COMMAND BELOW
-        THIS IS A TEMP FIX WHICH WILL BE REMOVED WHEN THE BUG IS FIXED BY THE U.C. MODULE TEAM
-       
-        " pip3 install -e git+https://github.com/jdholtz/undetected-chromedriver.git@29551bd27954dacaf09864cf77935524db642c1b#egg=undetected_chromedriver "
+        " pip3 install pyperclip pyinputplus undetected_chromedriver "
 
 Setup
 
