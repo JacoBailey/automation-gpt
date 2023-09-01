@@ -76,7 +76,7 @@ else:
     raise MissingPromptTemplateError
 
 #Locate prompt input locations, have the user supply inputs, & fill in the prompt with the user-supplied inputs
-prompt = Path(selectedTemplate).read_text()
+prompt = Path(selectedTemplate).read_text(encoding='utf8')
 templateInputSlots = inputRegex.findall(prompt) #TODO: Ensure a non-matched regex is handled
 userInputsDict = {}
 if templateInputSlots == ['']:
