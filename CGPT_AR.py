@@ -121,7 +121,7 @@ cgptChatbox = WebDriverWait(browser, 20).until(EC.presence_of_element_located((B
 cgptChatbox.send_keys(prompt)
 cgptChatbox_SendButton = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.flex.w-full.items-center > div > button')))
 cgptChatbox_SendButton.click()
-clipboardButton = WebDriverWait(browser, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button')))
+clipboardButton = WebDriverWait(browser, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button')))
 clipboardButton.click()
 browser.close()
 print('\nResponse copied to clipboard\n------------------------------')
