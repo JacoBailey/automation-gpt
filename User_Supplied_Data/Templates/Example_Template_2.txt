@@ -1,0 +1,1 @@
+Please write a block of python code which will INSERT DESIRED PYTHON SCRIPT FUNCTION. Also, explain how the code works.

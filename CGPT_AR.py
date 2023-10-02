@@ -7,6 +7,7 @@
 #TODO: Create a better solution for users to run program
 
 #TODO Download all necessary packages upon program download/initiation
+from xml.sax.xmlreader import Locator
 import pyperclip, ssl, re, os, json, time
 import undetected_chromedriver as uc
 import pyinputplus as pyip
@@ -16,6 +17,20 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+class Automation:
+    
+    def __init__(self, browser, secondsToTimeout, findBy) -> None:
+        self.__browser = browser
+        self.__secondsToTimeout = secondsToTimeout
+        self.__findBy = findBy
+
+    def findElement(self, element):
+        try:
+            WebDriverWait(self.__browser, self.__secondsToTimeout).until(EC.presence_of_element_located((self.__findBy, element)))
+        except:
+            print('\'FindElement\' method requires passing of html element string argument and creation of \'elementFinder\' object.')
+
+#REMEMBER CLASS INSTANCES AND USING PROPERTIES
 
 #Program Setup (Establish SSL/TLS, custom exceptions, regex patterns)
 ssl._create_default_https_context = ssl._create_stdlib_context
@@ -29,6 +44,7 @@ class JSONDecodeError(Exception):
 class MissingPromptTemplateError(Exception):
     'Please ensure that there is at least one prompt template textfile within the \'User_Suppied_Data/Templates\' program directory.'
     pass
+
 
 
 #Dynamically locate filefolder for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
@@ -97,32 +113,34 @@ else:
                     continue
             break
         userInputsDict[inputSlotName] = userInput
-        prompt = prompt.replace(fullInputSlot, userInput) #Streamline attempt
+        prompt = prompt.replace(fullInputSlot, userInput)
 
 
 #Open Browser and log in to CGPT, skip past pop-ups, enter prompt, and return result to terminal + copy to user's clipboard
 browser = uc.Chrome()
 browser.get('https://chat.openai.com')
 
-
 #TODO: Handle invalid username and password
 #TODO: Minimize/hide browser OR requests w/ undetected...?
-loginbutton = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button:nth-child(1)')))
+
+elementFinder = Automation(browser, 20, By.CSS_SELECTOR)
+loginbutton = elementFinder.findElement('button:nth-child(1)')
 loginbutton.click()
-emailInput = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#username')))
-emailInput.send_keys(userUsername)
+emailInput = elementFinder.findElement('#username')
 emailInput.send_keys(Keys.ENTER)
-pwInput = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#password')))
-pwInput.send_keys(userPassword)
+pwInput = elementFinder.findElement('#password')
 pwInput.send_keys(Keys.ENTER)
-popUP_OkayLetsGoButton = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.flex.flex-row.justify-end > button')))
+continueButton = elementFinder.findElement('body > div.oai-wrapper > main > section > div > div > div > form > div.c6d5cc3be > button')
+continueButton.send_keys(Keys.ENTER)
+popUP_OkayLetsGoButton = elementFinder.findElement('div.flex.flex-row.justify-end > button')
 popUP_OkayLetsGoButton.click()
-cgptChatbox = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#prompt-textarea')))
+cgptChatbox = elementFinder.findElement('#prompt-textarea')
 cgptChatbox.send_keys(prompt)
-cgptChatbox_SendButton = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.flex.w-full.items-center > div > button')))
+cgptChatbox_SendButton = elementFinder.findElement('div.flex.w-full.items-center > div > button')
 cgptChatbox_SendButton.click()
 clipboardButton = WebDriverWait(browser, 120).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button')))
 clipboardButton.click()
+
 browser.close()
 print('\nResponse copied to clipboard\n------------------------------')
 print(pyperclip.paste(), '\n')
