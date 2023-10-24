@@ -8,6 +8,7 @@
 
 #TODO Download all necessary packages upon program download/initiation
 from xml.sax.xmlreader import Locator
+import ModsPacksLibs
 import pyperclip, ssl, re, os, json, time
 import undetected_chromedriver as uc
 import pyinputplus as pyip
@@ -17,20 +18,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class Automation:
-    
-    def __init__(self, browser, secondsToTimeout, findBy) -> None:
-        self.__browser = browser
-        self.__secondsToTimeout = secondsToTimeout
-        self.__findBy = findBy
-
-    def findElement(self, element):
-        try:
-            WebDriverWait(self.__browser, self.__secondsToTimeout).until(EC.presence_of_element_located((self.__findBy, element)))
-        except:
-            print('\'FindElement\' method requires passing of html element string argument and creation of \'elementFinder\' object.')
-
-#REMEMBER CLASS INSTANCES AND USING PROPERTIES
 
 #Program Setup (Establish SSL/TLS, custom exceptions, regex patterns)
 ssl._create_default_https_context = ssl._create_stdlib_context
@@ -44,7 +31,6 @@ class JSONDecodeError(Exception):
 class MissingPromptTemplateError(Exception):
     'Please ensure that there is at least one prompt template textfile within the \'User_Suppied_Data/Templates\' program directory.'
     pass
-
 
 
 #Dynamically locate filefolder for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
@@ -123,7 +109,7 @@ browser.get('https://chat.openai.com')
 #TODO: Handle invalid username and password
 #TODO: Minimize/hide browser OR requests w/ undetected...?
 
-elementFinder = Automation(browser, 20, By.CSS_SELECTOR)
+elementFinder = ModsPacksLibs.Automation(browser, 20, By.CSS_SELECTOR)
 loginbutton = elementFinder.findElement('button:nth-child(1)')
 loginbutton.click()
 emailInput = elementFinder.findElement('#username')
