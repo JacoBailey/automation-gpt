@@ -14,6 +14,3 @@ class Automation:
                 return WebDriverWait(self.__browser, self.__secondsToTimeout).until(EC.presence_of_element_located((self.__findBy, element)))
             except:
                 print('\'FindElement\' method requires passing of html element string argument and creation of \'elementFinder\' object.')
-    
-    def close(self):
-       self.__browser =  self.__browser.close()
