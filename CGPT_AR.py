@@ -23,7 +23,7 @@ from selenium.webdriver.support import expected_conditions as EC
 ssl._create_default_https_context = ssl._create_stdlib_context
 inputRegex = re.compile(r'''(
                         (INSERT{1})
-                        ((\s{1}[A-Z]+)+)
+                        ((\s{1}[A-Z0-9]+)+)
                         )''', re.VERBOSE)
 class JSONDecodeError(Exception):
     'Please ensure that the JSON data is formatted correctly based on the program\'s documentation/README.'
