@@ -55,7 +55,16 @@ if userUsername == '' or userPassword == '':
 #TODO: Create tests for exception handling to ensure proper functioning.
 templateFolderLocation = os.path.join(fileFolder, 'User_Supplied_Data', 'Templates')
 templateNamesList = []
-for foldername, subfolders, filenames in os.walk(templateFolderLocation):
+fileNames = ModsPacksLibs.filewalk(templateFolderLocation)
+for fileName in fileNames:
+        if Path(fileName).suffix != '.txt':
+                continue
+        else:
+            templateNamesList.append(fileName)
+if templateNamesList == []:
+    raise Exception('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory before re-running the program.')
+
+'''for foldername, subfolders, filenames in os.walk(templateFolderLocation):
     for filename in filenames:
         if Path(filename).suffix != '.txt':
             if templateNamesList == [] and filename == filenames[-1]:
@@ -63,7 +72,7 @@ for foldername, subfolders, filenames in os.walk(templateFolderLocation):
             else:
                 continue
         else:
-            templateNamesList.append(filename)
+            templateNamesList.append(filename)'''
 
 
 #Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
@@ -88,19 +97,10 @@ else:
         fullInputSlot = templateInputSlots[inputSlot][0]
         inputSlotName = templateInputSlots[inputSlot][2]
         while True:
-            print(f'Please enter an input for: {inputSlotName}')
-            userInput = input()
-            if userInput == '':
-                print(f'You have entered no input for: {inputSlotName}\nIs this correct?')
-                yesOrNo = pyip.inputYesNo()
-                if yesOrNo == 'yes':
-                    break
-                else:
-                    continue
+            userInput = ModsPacksLibs.yesToContinue(f'Please enter an input for: {inputSlotName}')
             break
         userInputsDict[inputSlotName] = userInput
         prompt = prompt.replace(fullInputSlot, userInput)
-
 
 #Open Browser and log in to CGPT, skip past pop-ups, enter prompt, and return result to terminal + copy to user's clipboard
 browser = uc.Chrome()
