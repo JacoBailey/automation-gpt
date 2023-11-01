@@ -3,10 +3,10 @@
 
 #TODO: Remove the below
 #Currently using this fix for "chromedriver not compatible w/ chrome version 116" issue > https://github.com/ultrafunkamsterdam/undetected-chromedriver/pull/1478
-
 #TODO: Create a better solution for users to run program
-
 #TODO Download all necessary packages upon program download/initiation
+
+
 from xml.sax.xmlreader import Locator
 import ModsPacksLibs #Custom Modules
 import pyperclip, ssl, re, os, json, time
@@ -27,9 +27,6 @@ inputRegex = re.compile(r'''(
                         )''', re.VERBOSE)
 class JSONDecodeError(Exception):
     'Please ensure that the JSON data is formatted correctly based on the program\'s documentation/README.'
-    pass
-class MissingPromptTemplateError(Exception):
-    'Please ensure that there is at least one prompt template textfile within the \'User_Suppied_Data/Templates\' program directory.'
     pass
 
 
@@ -64,16 +61,6 @@ for fileName in fileNames:
 if templateNamesList == []:
     raise Exception('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory before re-running the program.')
 
-'''for foldername, subfolders, filenames in os.walk(templateFolderLocation):
-    for filename in filenames:
-        if Path(filename).suffix != '.txt':
-            if templateNamesList == [] and filename == filenames[-1]:
-                raise Exception('No textfile templates found in the \'Templates\' folder. Please add a textfile before running the program.')
-            else:
-                continue
-        else:
-            templateNamesList.append(filename)'''
-
 
 #Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
 #If there is only one prompt, then it auto selects the prompt
@@ -81,10 +68,9 @@ if templateNamesList == []:
 if len(templateNamesList) > 1:
     selectedTemplateName = pyip.inputMenu(templateNamesList, numbered = True)
     selectedTemplate = os.path.join(templateFolderLocation, selectedTemplateName)
-elif len(templateNamesList) == 1:
-    selectedTemplate = os.path.join(templateFolderLocation, templateNamesList[0])
 else:
-    raise MissingPromptTemplateError
+    selectedTemplate = os.path.join(templateFolderLocation, templateNamesList[0])
+
 
 #Locate prompt input locations, have the user supply inputs, & fill in the prompt with the user-supplied inputs
 prompt = Path(selectedTemplate).read_text(encoding='utf8')
@@ -97,17 +83,20 @@ else:
         fullInputSlot = templateInputSlots[inputSlot][0]
         inputSlotName = templateInputSlots[inputSlot][2]
         while True:
-            userInput = ModsPacksLibs.yesToContinue(f'Please enter an input for: {inputSlotName}')
+            userInput = ModsPacksLibs.inputCorrectValidation(f'Please enter an input for: {inputSlotName}', inputSlotName)
             break
         userInputsDict[inputSlotName] = userInput
         prompt = prompt.replace(fullInputSlot, userInput)
+
 
 #Open Browser and log in to CGPT, skip past pop-ups, enter prompt, and return result to terminal + copy to user's clipboard
 browser = uc.Chrome()
 browser.get('https://chat.openai.com')
 
+
 #TODO: Handle invalid username and password
 #TODO: Minimize/hide browser OR requests w/ undetected...?
+
 
 elementFinder = ModsPacksLibs.Automation(browser, 20, By.CSS_SELECTOR)
 loginbutton = elementFinder.findElement('button:nth-child(1)')
