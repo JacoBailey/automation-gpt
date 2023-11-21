@@ -29,24 +29,30 @@ class JSONDecodeError(Exception):
     'Please ensure that the JSON data is formatted correctly based on the program\'s documentation/README.'
     pass
 
+def readJsonFile(json_file_loc):
+    try:
+        unpwJsonFile = open(json_file_loc, 'r')
+    except FileNotFoundError:
+        return print('Please ensure that the username/password containing \'UN_PW.json\' exists and is located in the \'User_Supplied_Data\' folder.')
+    return unpwJsonFile.read()
+
+def json_Unpw_Parser(json_file_contents):
+    try: #TODO: Test this to ensure correct funcionality
+        UnPwDict = json.loads(json_file_contents)
+    except JSONDecodeError:
+        return print('Invalid UN/PW file. Please fix JSON UN/PW file.')
+    username, password = UnPwDict['username'], UnPwDict['password']
+    if username == '' or password == '':
+        return Exception('Empty username or password in \'UN_PW.json\' file.')
+    else:
+        return username, password
 
 #Dynamically locate filefolder for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
 #TODO: Create tests for exception handling to ensure proper functioning.
 fileFolder = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
 unpwJsonFileLoc = os.path.join(fileFolder, 'User_Supplied_Data', 'UN_PW.json')
-try:
-    unpwJsonFile = open(unpwJsonFileLoc, 'r')
-except FileNotFoundError:
-    print('Please ensure that the username/password containing \'UN_PW.json\' exists and is located in the \'User_Supplied_Data\' folder.')
-unpwJsonFileContents = unpwJsonFile.read()
-try: #TODO: Test this to ensure correct funcionality
-    UnPwDict = json.loads(unpwJsonFileContents)
-except JSONDecodeError:
-    print('Please fix JSON UN/PW file.')
-userUsername, userPassword = UnPwDict['username'], UnPwDict['password']
-if userUsername == '' or userPassword == '':
-    raise Exception('Empty username or password in \'UN_PW.json\' file.')
-
+unpwJsonFileContents = readJsonFile(unpwJsonFileLoc)
+userUsername, userPassword = json_Unpw_Parser(unpwJsonFileContents)
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Create tests for exception handling to ensure proper functioning.
