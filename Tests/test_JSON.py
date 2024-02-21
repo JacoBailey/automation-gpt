@@ -35,6 +35,8 @@ class Test_Json_Data_Parse:
         username, password = JsonObject_Valid.json_Unpw_Parser()
         assert username == 'personmcname@website.org' and password == '123password'
     
+    #TODO: Combine the below tests into a parameterized version
+        
     def test_Json_Missing_Unpw_Data(self):
         missingUnPwDataObject = ModsPacksLibs.jsonHandler(None,'{"username":"","password":""}')
         with pytest.raises(ModsPacksLibs.InvalidUnpwJson):
