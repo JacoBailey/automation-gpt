@@ -4,9 +4,8 @@
 #TODO: Create a better solution for users to run program
 #TODO Download all necessary packages upon program download/initiation
 
-from xml.sax.xmlreader import Locator
 import ModsPacksLibs #Custom Modules
-import pyperclip, ssl, re, os, json, time
+import pyperclip, re, os, json, time
 import pyinputplus as pyip
 from pathlib import Path
 from seleniumbase import SB
