@@ -4,9 +4,8 @@
 #TODO: Create a better solution for users to run program
 #TODO Download all necessary packages upon program download/initiation
 
-from xml.sax.xmlreader import Locator
 import ModsPacksLibs #Custom Modules
-import pyperclip, ssl, re, os, json, time
+import pyperclip, re, os, time
 import pyinputplus as pyip
 from pathlib import Path
 from seleniumbase import SB
@@ -32,7 +31,7 @@ inputRegex = re.compile(r'''(
 #TODO: Convert to module?
 fileFolder = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
 unpwJsonFileLoc = os.path.join(fileFolder, 'User_Supplied_Data', 'UN_PW.json')
-unpwJsonFileContents = ModsPacksLibs.JSON(unpwJsonFileLoc)
+unpwJsonFileContents = ModsPacksLibs.jsonHandler(unpwJsonFileLoc)
 userUsername, userPassword = unpwJsonFileContents.json_Unpw_Parser()
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
