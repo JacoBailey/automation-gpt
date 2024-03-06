@@ -28,15 +28,14 @@ inputRegex = re.compile(r'''(
 
 #Dynamically locate filefolder for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
 #TODO: Create tests for exception handling to ensure proper functioning.
-#TODO: Convert to module?
 fileFolder = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
 unpwJsonFileLoc = os.path.join(fileFolder, 'User_Supplied_Data', 'UN_PW.json')
 unpwJsonFileContents = ModsPacksLibs.jsonHandler(unpwJsonFileLoc)
 userUsername, userPassword = unpwJsonFileContents.json_Unpw_Parser()
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
+#TODO: Convert all logic below to module?
 #TODO: Create tests for exception handling to ensure proper functioning.
-#TODO: Convert to module?
 templateFolderLocation = os.path.join(fileFolder, 'User_Supplied_Data', 'Templates')
 templateNamesList = []
 fileNames = ModsPacksLibs.filewalk(templateFolderLocation)
@@ -47,7 +46,6 @@ for fileName in fileNames:
             templateNamesList.append(fileName)
 if templateNamesList == []:
     raise Exception('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory before re-running the program.')
-
 #Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
 #If there is only one prompt, then it auto selects the prompt
 #If there are no prompts, it returns an exception
@@ -56,7 +54,6 @@ if len(templateNamesList) > 1:
     selectedTemplate = os.path.join(templateFolderLocation, selectedTemplateName)
 else:
     selectedTemplate = os.path.join(templateFolderLocation, templateNamesList[0])
-
 #Locate prompt input locations, have the user supply inputs, & fill in the prompt with the user-supplied inputs
 prompt = Path(selectedTemplate).read_text(encoding='utf8')
 templateInputSlots = inputRegex.findall(prompt) #TODO: Ensure a non-matched regex is handled
