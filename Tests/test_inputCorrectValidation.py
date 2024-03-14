@@ -30,4 +30,4 @@ class Test_Input_Correct_Validation:
     def test_NoInput(self, mock_input, mock_inputYesNo, inputYesNoValue):
         mock_input.return_value = 'test'
         mock_inputYesNo.return_value = inputYesNoValue
-        assert ModsPacksLibs.inputCorrectValidation('test', 'testInput') == 'test'
+        assert ModsPacksLibs.inputCorrectValidation('test', 'testInput', noTest=True) == False
