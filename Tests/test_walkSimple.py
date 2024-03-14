@@ -10,22 +10,22 @@ sys.path.append(mainProgDirec_Str)
 #----------------------------------------------------------------------------
 import ModsPacksLibs
 
-root = ''
-directories = ''
-files = ''
-validTestsProgDirectory = Path(re.sub(r'(/|\\)test_Filewalk.py','',str(__file__), count=1))
-invalidTestsProgDirectory = os.path.join(Path(re.sub(r'(/|\\)Tests(/|\\)test_Filewalk.py','',str(__file__), count=1)), 'Test')
+rootVar = ''
+dirsVar = ''
+filesVar = ''
+validTestsProgDirectory = Path(re.sub(r'(/|\\)test_Walk_Simple.py','',str(__file__), count=1))
+invalidTestsProgDirectory = os.path.join(Path(re.sub(r'(/|\\)Tests(/|\\)test_Walk_Simple.py','',str(__file__), count=1)), 'Test')
 for root, dirs, files in os.walk(validTestsProgDirectory):
-    root = root
-    directories = dirs
-    files = files
+    rootVar = root
+    dirsVar = dirs
+    filesVar = files
 
-
-
-class Test_filewalk:
+class Test_walkSimple:
 
     def test_Valid_Directory_Filewalk(self):
-        assert files == ModsPacksLibs.filewalk(validTestsProgDirectory)
+        walkSimpInst = ModsPacksLibs.walk_simple(validTestsProgDirectory)
+        assert walkSimpInst.root == rootVar and walkSimpInst.dirs == dirsVar and walkSimpInst.files == filesVar
+
     def test_Invalid_Directory_Filewalk(self):
-            with pytest.raises(ModsPacksLibs.invalidDirectory):
-                ModsPacksLibs.filewalk(invalidTestsProgDirectory)   
+        with pytest.raises(ModsPacksLibs.invalidDirectory):
+            walkSimpInst = ModsPacksLibs.walk_simple(invalidTestsProgDirectory)

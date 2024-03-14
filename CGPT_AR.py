@@ -38,7 +38,8 @@ userUsername, userPassword = unpwJsonFileContents.json_Unpw_Parser()
 #TODO: Create tests for exception handling to ensure proper functioning.
 templateFolderLocation = os.path.join(fileFolder, 'User_Supplied_Data', 'Templates')
 templateNamesList = []
-fileNames = ModsPacksLibs.filewalk(templateFolderLocation)
+walkObj = ModsPacksLibs.walkSimple(templateFolderLocation)
+fileNames = walkObj.files
 for fileName in fileNames:
         if Path(fileName).suffix != '.txt':
                 continue
