@@ -25,7 +25,6 @@ class jsonHandler:
             raise ValueError
         username, password = UnPwDict['username'], UnPwDict['password']
         if username in [None,'','INSERT USERNAME HERE'] or password in [None,'','INSERT PASSWORD HERE']:
-            print(f'username: {username}, password: {password}')
-            raise InvalidUnpwJson('Invalid username or password in \'UN_PW.json\' file. Please fix username or password JSON data.')
+            raise InvalidUnpwJson(f'Invalid username or password in \'UN_PW.json\' file. Please fix username or password JSON data.\nusername: {username}, password: {password}')
         else:
             return username, password
