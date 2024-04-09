@@ -1,12 +1,13 @@
 import pyinputplus as pyip
 
-def inputCorrectValidation(prompt, inputType):
+def inputCorrectValidation(prompt, inputType, noTest=False):
     while True:
-        print(prompt)
-        userInput = input()
-        print(f'You have entered \'{userInput}\' as {inputType}.\nIs this correct?')
-        yesNo = pyip.inputYesNo()
-        if yesNo == 'no':
-            continue
+        userInput = input(prompt + '\n')
+        yesNo = pyip.inputYesNo(prompt=f'You have entered \'{userInput}\' as {inputType}.\nIs this correct?\n')
+        if yesNo in ['no', 'n', 'NO', 'N', 'No' 'nO']:
+            if noTest == True:
+                return False
+            else:
+                continue
         else:
             return userInput
