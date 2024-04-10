@@ -15,3 +15,4 @@ class walk_simple:
             self.root = root
             self.dirs = dirs
             self.files = files
+            break
