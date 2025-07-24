@@ -5,7 +5,7 @@ class InvalidUnpwJson(Exception):
 
 class jsonHandler:
     def __init__(self, json_file_loc, *args):
-        #Below if statement allows for optional non-file JSON data loading via string argument
+        #Below if statement allows for optional JSON data loading via string argument
         if json_file_loc == None:
             self.jsonFileContents = args[0]
         else:
@@ -26,5 +26,4 @@ class jsonHandler:
         username, password = UnPwDict['username'], UnPwDict['password']
         if username in [None,'','INSERT USERNAME HERE'] or password in [None,'','INSERT PASSWORD HERE']:
             raise InvalidUnpwJson(f'Invalid username or password in \'UN_PW.json\' file. Please fix username or password JSON data.\nusername: {username}, password: {password}')
-        else:
-            return username, password
+        return username, password

@@ -19,6 +19,7 @@ for root, dirs, files in os.walk(validTestsProgDirectory):
     rootVar = root
     dirsVar = dirs
     filesVar = files
+    break
 
 class Test_walkSimple:
 

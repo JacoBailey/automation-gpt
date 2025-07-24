@@ -4,8 +4,10 @@
 #TODO: Create tests for multiSelectorSearch
 #TODO: Create a better solution for users to run program
 #TODO: Download all necessary packages upon program download/initiation
-#TODO: Add user-selectable option (or include as metadata) for approximate size of CGPT response based on prompt
-#See other todos in logic below
+    #TODO: Ensure package versions are specified for stability
+#TODO: Add user-selectable prompt option (or include as metadata) for approximate size of CGPT response based on prompt
+#TODO: See other todos in logic below
+#TODO: Add docstrings to all classes, functions, etc.
 
 import ModsPacksLibs #Custom Modules
 import pyperclip, re, os, time
@@ -19,15 +21,16 @@ inputRegex = re.compile(r'''(
                         ((\s{1}[A-Z0-9]+)+)
                         )''', re.VERBOSE)
 
-#Dynamically locate filefolder for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
-fileFolder = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
-unpwJsonFileLoc = os.path.join(fileFolder, 'User_Supplied_Data', 'UN_PW.json')
+#Dynamically locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
+#TODO: Update with Path module (this is largely unecessary)
+progFileDirectory = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
+unpwJsonFileLoc = os.path.join(progFileDirectory, 'User_Supplied_Data', 'UN_PW.json')
 unpwJsonFileContents = ModsPacksLibs.jsonHandler(unpwJsonFileLoc)
 userUsername, userPassword = unpwJsonFileContents.json_Unpw_Parser()
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Convert all logic below to module?
-templateFolderLocation = os.path.join(fileFolder, 'User_Supplied_Data', 'Templates')
+templateFolderLocation = os.path.join(progFileDirectory, 'User_Supplied_Data', 'Templates')
 templateNamesList = []
 walkObj = ModsPacksLibs.walkSimple.walk_simple(templateFolderLocation)
 fileNames = walkObj.files
@@ -44,9 +47,9 @@ if templateNamesList == []:
 #If there are no prompts, it returns an exception
 if len(templateNamesList) > 1:
     selectedTemplateName = pyip.inputMenu(templateNamesList, numbered = True)
-    selectedTemplate = os.path.join(templateFolderLocation, selectedTemplateName)
 else:
-    selectedTemplate = os.path.join(templateFolderLocation, templateNamesList[0])
+    selectedTemplateName = templateNamesList[0]
+selectedTemplate = os.path.join(templateFolderLocation, selectedTemplateName)
 
 #Locate prompt input locations, have the user supply inputs, & fill in the prompt with the user-supplied inputs
 prompt = Path(selectedTemplate).read_text(encoding='utf8')
