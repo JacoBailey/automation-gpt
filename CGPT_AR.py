@@ -7,7 +7,9 @@
     #TODO: Ensure package versions are specified for stability
 #TODO: Add user-selectable prompt option (or include as metadata) for approximate size of CGPT response based on prompt
 #TODO: See other todos in logic below
+#TODO: Ensure specific module/lib versions are chosen in requirements (update to current, then set specific version)
 #TODO: Add docstrings to all classes, functions, etc.
+#TODO: Fix formatting/escaping issue with CSS selector strings (causing error print statements during program initial launch)
 
 import ModsPacksLibs #Custom Modules
 import pyperclip, re, os, time
@@ -68,27 +70,31 @@ else:
         prompt = prompt.replace(fullInputSlot, userInput)
 
 #Open Browser and log in to CGPT, skip past pop-ups, enter prompt, and return result to terminal + copy to user's clipboard
-#TODO: Handle invalid username and password
 #TODO: Minimize/hide browser
 with SB(uc=True) as browser:
     browser.open('https://chat.openai.com/auth/login')
-    while True:
-        try: #Tests for pre/auto-login
+    
+    browser.wait_for_elemeent_visible('#\:r1\:-email').send_keys(userUsername)
+    browser.wait_for_elemeent_visible('#\:r1\: > div._section_1alro_7._ctas_1alro_13 > button').click()
+    browser.wait_for_elemeent_visible('#\:re\:-current-password').send_keys(userPassword)
+    browser.wait_for_elemeent_visible('#\:re\: > div._section_1alro_7._ctas_1alro_13 > button').click()
+
+'''browser.wait_for_element_visible('button:nth-child(1)').click()
+            activeUsernameSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#email-input', '#username'])
+            browser.wait_for_element_visible(activeUsernameSelector).send_keys(userUsername)
+            activeContinueUsernameButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
+            browser.wait_for_element_visible(activeContinueUsernameButtonSelector).click()
+            browser.wait_for_element_visible('#password').send_keys(userPassword)
+            activePasswordContinueButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
+            browser.wait_for_element_visible(activePasswordContinueButtonSelector).click()
+            browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
+        
+            try: #Tests for pre/auto-login
             browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
         except seleniumbase.common.exceptions.NoSuchElementException: #Login loop, if not pre/auto-login
             try:
-                browser.wait_for_element_visible('button:nth-child(1)').click()
-                activeUsernameSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#email-input', '#username'])
-                browser.wait_for_element_visible(activeUsernameSelector).send_keys(userUsername)
-                activeContinueUsernameButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
-                browser.wait_for_element_visible(activeContinueUsernameButtonSelector).click()
-                browser.wait_for_element_visible('#password').send_keys(userPassword)
-                activePasswordContinueButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
-                browser.wait_for_element_visible(activePasswordContinueButtonSelector).click()
-                browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
             except seleniumbase.common.exceptions.NoSuchElementException:
                 raise
-        break
     activePromptSubmitButton = ModsPacksLibs.multiSelectorSearch(browser,
                                                    ['#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\:pt-0.dark\:border-white\/20.md\:border-transparent.md\:dark\:border-transparent.md\:w-\[calc\(100\%-\.5rem\)\] > form > div > div.flex.w-full.items-center > div > button',
                                                     'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button',
@@ -105,4 +111,4 @@ with SB(uc=True) as browser:
     browser.wait_for_element_clickable(copyResponseButtonSelector).click()
 
 print('\nResponse copied to clipboard\n------------------------------')
-print(pyperclip.paste(), '\n')
+print(pyperclip.paste(), '\n')'''
