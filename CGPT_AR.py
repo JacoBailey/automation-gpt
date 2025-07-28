@@ -1,7 +1,7 @@
 #CHAT GPT AUTO RESPONSE
 #!python3
 
-#TODO: Create tests for multiSelectorSearch
+#TODO: Create tests for multi_selector_search
 #TODO: Create a better solution for users to run program
 #TODO: Download all necessary packages upon program download/initiation
     #TODO: Ensure package versions are specified for stability
@@ -78,14 +78,16 @@ with SB(uc=True) as browser:
     browser.wait_for_elemeent_visible('#\:r1\: > div._section_1alro_7._ctas_1alro_13 > button').click()
     browser.wait_for_elemeent_visible('#\:re\:-current-password').send_keys(userPassword)
     browser.wait_for_elemeent_visible('#\:re\: > div._section_1alro_7._ctas_1alro_13 > button').click()
+    codeInput = ModsPacksLibs.MultiSelectorSearch.multi_selector_search(browser, ['#\:r15\:-code'])
+    print(f'Yahoo itsa: {codeInput}!')
 
 '''browser.wait_for_element_visible('button:nth-child(1)').click()
-            activeUsernameSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#email-input', '#username'])
+            activeUsernameSelector = ModsPacksLibs.multi_selector_search(browser, ['#email-input', '#username'])
             browser.wait_for_element_visible(activeUsernameSelector).send_keys(userUsername)
-            activeContinueUsernameButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
+            activeContinueUsernameButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
             browser.wait_for_element_visible(activeContinueUsernameButtonSelector).click()
             browser.wait_for_element_visible('#password').send_keys(userPassword)
-            activePasswordContinueButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
+            activePasswordContinueButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
             browser.wait_for_element_visible(activePasswordContinueButtonSelector).click()
             browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
         
@@ -95,14 +97,14 @@ with SB(uc=True) as browser:
             try:
             except seleniumbase.common.exceptions.NoSuchElementException:
                 raise
-    activePromptSubmitButton = ModsPacksLibs.multiSelectorSearch(browser,
+    activePromptSubmitButton = ModsPacksLibs.multi_selector_search(browser,
                                                    ['#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\:pt-0.dark\:border-white\/20.md\:border-transparent.md\:dark\:border-transparent.md\:w-\[calc\(100\%-\.5rem\)\] > form > div > div.flex.w-full.items-center > div > button',
                                                     'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button',
                                                     '#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\:pt-0.dark\:border-white\/20.md\:border-transparent.md\:dark\:border-transparent.md\:w-\[calc\(100\%-\.5rem\)\] > form > div > div.flex.w-full.items-center > div > button'
                                                     ]
                                                     )
     browser.wait_for_element_visible(activePromptSubmitButton).click()
-    copyResponseButtonSelector = ModsPacksLibs.multiSelectorSearch(browser, 
+    copyResponseButtonSelector = ModsPacksLibs.multi_selector_search(browser, 
                                                     ['#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div > div > div:nth-child(3) > div > div > div.relative.flex.w-full.flex-col.agent-turn > div.flex-col.gap-1.md\:gap-3 > div.mt-1.flex.justify-start.gap-3.empty\:hidden > div > span:nth-child(1) > button',
                                                     '#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div > div > div > div:nth-child(3) > div > div > div.relative.flex.w-full.flex-col.agent-turn > div.flex-col.gap-1.md\:gap-3 > div.mt-1.flex.gap-3.empty\:hidden > div > span > button'
                                                     ],
