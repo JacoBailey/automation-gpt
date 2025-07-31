@@ -14,9 +14,10 @@
 import ModsPacksLibs #Custom Modules
 import pyperclip, re, os, time
 import pyinputplus as pyip
+import seleniumbase
 from pathlib import Path
 from seleniumbase import SB
-import seleniumbase
+from dotenv import load_dotenv
 
 inputRegex = re.compile(r'''(
                         (INSERT{1})
@@ -25,14 +26,14 @@ inputRegex = re.compile(r'''(
 
 #Dynamically locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
 #TODO: Update with Path module (this is largely unecessary)
-progFileDirectory = re.sub(r'(/|\\)CGPT_AR.py', '', str(__file__), count=1)
-unpwJsonFileLoc = os.path.join(progFileDirectory, 'User_Supplied_Data', 'UN_PW.json')
-unpwJsonFileContents = ModsPacksLibs.jsonHandler(unpwJsonFileLoc)
-userUsername, userPassword = unpwJsonFileContents.json_Unpw_Parser()
+unpwJsonFilepath = Path(__file__).resolve().parents[1] / "CGPT.env"
+load_dotenv(dotenv_path=unpwJsonFilepath)
+username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Convert all logic below to module?
-templateFolderLocation = os.path.join(progFileDirectory, 'User_Supplied_Data', 'Templates')
+templateFolderLocation = Path(__file__).resolve().parent / 'User_Supplied_Data' / 'Templates'
+print(templateFolderLocation)
 templateNamesList = []
 walkObj = ModsPacksLibs.walkSimple.walk_simple(templateFolderLocation)
 fileNames = walkObj.files
@@ -74,19 +75,20 @@ else:
 with SB(uc=True) as browser:
     browser.open('https://chat.openai.com/auth/login')
     
-    browser.wait_for_elemeent_visible('#\:r1\:-email').send_keys(userUsername)
+    browser.wait_for_elemeent_visible('#\:r1\:-email').send_keys(username)
     browser.wait_for_elemeent_visible('#\:r1\: > div._section_1alro_7._ctas_1alro_13 > button').click()
-    browser.wait_for_elemeent_visible('#\:re\:-current-password').send_keys(userPassword)
+    browser.wait_for_elemeent_visible('#\:re\:-current-password').send_keys(password)
     browser.wait_for_elemeent_visible('#\:re\: > div._section_1alro_7._ctas_1alro_13 > button').click()
-    codeInput = ModsPacksLibs.MultiSelectorSearch.multi_selector_search(browser, ['#\:r15\:-code'])
-    print(f'Yahoo itsa: {codeInput}!')
+
+'''    codeInput = ModsPacksLibs.MultiSelectorSearch.multi_selector_search(browser, ['#\:r15\:-code'])
+    print(f'Yahoo itsa: {codeInput}!')'''
 
 '''browser.wait_for_element_visible('button:nth-child(1)').click()
             activeUsernameSelector = ModsPacksLibs.multi_selector_search(browser, ['#email-input', '#username'])
-            browser.wait_for_element_visible(activeUsernameSelector).send_keys(userUsername)
+            browser.wait_for_element_visible(activeUsernameSelector).send_keys(username)
             activeContinueUsernameButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
             browser.wait_for_element_visible(activeContinueUsernameButtonSelector).click()
-            browser.wait_for_element_visible('#password').send_keys(userPassword)
+            browser.wait_for_element_visible('#password').send_keys(password)
             activePasswordContinueButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
             browser.wait_for_element_visible(activePasswordContinueButtonSelector).click()
             browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
