@@ -24,11 +24,13 @@ inputRegex = re.compile(r'''(
 #Ensures program is run in the program file (primarily for IDE use)
 os.chdir(Path(__file__).resolve().parent)
 
-#TODO: Temporarily comment out unpw handling until I have created proper handling for it
+#Temporarily commented out unpw handling until I have created proper handling for it
+'''
 #Locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
 unpwJsonFilepath = Path(__file__).resolve().parents[1] / "CGPT.env"
 load_dotenv(dotenv_path=unpwJsonFilepath)
 username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
+'''
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Convert all logic below to module?
