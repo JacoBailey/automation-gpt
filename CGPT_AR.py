@@ -34,7 +34,7 @@ username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
 
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Convert all logic below to module?
-templateFolderLocation = Path(__file__).resolve().parent / 'User_Supplied_Data' / 'Templates'
+templateFolderLocation = Path(__file__).resolve().parent / 'Templates'
 print(templateFolderLocation)
 templateNamesList = []
 walkObj = ModsPacksLibs.walkSimple.walk_simple(templateFolderLocation)
