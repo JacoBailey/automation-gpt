@@ -1,33 +1,41 @@
 Title
 
-    ChatGPT Prompt Response Automation Tool
+    ChatGPT Automation Tool (for repeat workflows)
 
 Project Description
     
-    The purpose of this program is enable the user to optimize repetitive (but slightly different) ChatGPT workflows. It works by having the user select from a list of user-submitted text-prompt templates, then has the user submit input for the template, and automatically submits the prompt to ChatGPT and returns its response. This is a much more effecient process for repetitive ChatGPT work as it negates the need to manually fill in a prompt, visit the site and login, and retrieve the response from ChatGPT. It significantly cuts down on the required work steps and reduces the time by approximately 80-90% (prior to using this program, this would take around 10 minutes to do my personal ChatGPT workflows, now it usually takes around 1-2 minutes).
+    The purpose of this program is enable the user to optimize repetitive ChatGPT workflows. It works as follows:
+
+    1. Create templates for each prompt you wish to submt to ChatGPT (with areas to input specific additional details for each new prompt submission).
+    2. Select which prompt template to use from a list of your templates.
+    3. Submit your inputs for the selected template.
+    4. Watch as the tool automatically loads ChatGPT, submits the prompt, and copies the response to your clipboard.
+    
+    This is a much more effecient process for repetitive ChatGPT work as it negates the need to manually fill in a prompt, visit the site and login, and retrieve the response from ChatGPT, by conveniently packaging this operation into a single quick to use script. It significantly cuts down on the typical required steps and reduces the time by approximately 80-90%.
 
 Technologies Used
 
-    For the main logic of the program, I chose to use python. During my original creation of the program (outside of some basic CSS/HTML), it was the sole programming language which I knew and this was a personal project which I used to both optimize my work and solidify my knowledge of the language.
+    For the main logic of the program, I chose to use python. During my original creation of the program, it was the sole programming language which I knew and this was a personal project which I used to both as a means to optimize my work and to solidify my knowledge of the language.
 
 Challenges faced
 
     - ChatGPT's site changing selectors and dom structure (this made finding specific elements with selectors/xpath rather difficult)
     - Undetected_ChromeDriver package being incompatible with current chrome versions (using a temp fix)
+    - ChatCPT adding additional security preventing automated clicks to the copy button
 
 Features
 
     Current Features
-    - Easy template structure for users to create and use their own prompts
     - User-selectable input prompts for simplified workflows
+    - Easy template syntax structure for users to create and use their own prompts
     - Quick automation speed
 
     Planned Features
-    - More straightforward and simplified download/setup/run process for users
-    - Login session support (should significantly increase program speed due to removing the need to login during each run)
-    - Conversation Mode Support (will enable users to provide more than one input to ChatGPT so entire ChatGPT conversation workflows can be automated, as opposed to singular inputs.)
+    - Login + chat selection support
+    - Conversation support (will enable users to provide additional prompt replies to ChatGPT after the initial, so conversation workflows can be automated, as opposed to solely singular inputs)
 
 Installation
+\*_This setup assumes you already have python installed on your machine - if you do not, please proceed with python install prior to performing the following setup_
 
     1. Download the files via GitHub: https://github.com/JacoBailey/automation-gpt
         - Click the green "code" button > "Download ZIP"
@@ -35,26 +43,28 @@ Installation
     2. Unzip the file.
     3. Open Terminal/Powershell/etc. and run the following command(s) within the "...":
 
-        " pip3 install pyperclip pyinputplus undetected_chromedriver "
+        " pip3 install pyperclip==1.9.0 pyinputplus==0.2.12 undetected_chromedriver==3.5.5 seleniumbase==4.40.6 python-dotenv==1.1.1 "
 
 Setup
 
-    1. Open the program file (usually named 'automation-gpt-main').
-    2. Open the "USER_SUPPLIED_DATA" folder.
-    3. Open the 'UN_PW.json' file, replace the INSERT USERNAME HERE and INSERT PASSWORD HERE with your ChatGPT account username and password.
-    4. Open the "Template" folder (this is where all of your prompt templates for ChatGPT will be kept).
-    5. Using the example formatting which is showcased in the 'Example_Template.txt' file, create as many textfile prompt templates as you would like and save them in this folder.
+    1. Open the program file (will be named 'automation-gpt-main' unless you changed during download).
+    2. Open the "Templates" folder (this is where all of your prompt templates for ChatGPT will be kept).
+    3. Using the example formatting which is showcased in the example files, create as many textfile prompt templates as you would like and save them in this folder.
         - Files MUST use formatting shown in the example file with each input slot starting with "INSERT" and the remaining text written in capitals, otherwise the program will not recgonize it.
-        - After creating and saving your custom prompt templates, you are welcome to delete the 'Example_Template.txt' file so it will not be picked up and used by the program.
+        - After creating and saving your custom prompt templates, you are welcome to delete the example template files so they will not be picked up and used by the program (**NOTE:** _you must always have atleast one valid template in this directory otherwise the program will not function correctly_)
+
+Optional Setup
+
+    * Move CGPT.env file outside of program directory > fill out with your username and password to enable login functionality
 
 Run Instructions
 
     There are 2 options to run the program.
 
-    A. Bash/Shell Script (recommended).
+    1. Bash/Shell Script (recommended).
         - Google instructions on how to do this. There are many resources available online.
         - Use the filepath of the 'CGPT_AR.py' file for the Bash/Shell script.
-    B. Terminal w/ Filepath.
+    2. Terminal w/ Filepath.
         - Open the program file (should be named 'automation-gpt-main').
         - Copy the filepath for the 'CGPT_AR.py' file.
         - Open Terminal, Powershell, etc.
@@ -63,4 +73,4 @@ Run Instructions
 
 How To Contribute
 
-    At this point in time, I will probably not be accepting contributions, but feel free to suggest changes.
+    At this point in time, I will probably not be accepting contributions, but feel free to suggest changes, make note of bugs, etc..
