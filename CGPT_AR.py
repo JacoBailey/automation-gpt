@@ -2,14 +2,11 @@
 #!python3
 
 #TODO: Create tests for multi_selector_search
-#TODO: Create a better solution for users to run program
+#TODO: Update program to handle user login + specific chat selection
 #TODO: Download all necessary packages upon program download/initiation
-    #TODO: Ensure package versions are specified for stability
-#TODO: Add user-selectable prompt option (or include as metadata) for approximate size of CGPT response based on prompt
-#TODO: See other todos in logic below
-#TODO: Ensure specific module/lib versions are chosen in requirements (update to current, then set specific version)
+#TODO: Ensure specific module/lib versions are chosen in requirements for added stability (update to current, then set specific version)
 #TODO: Add docstrings to all classes, functions, etc.
-#TODO: Fix formatting/escaping issue with CSS selector strings (causing error print statements during program initial launch)
+#TODO: Fix formatting/escaping issue with CSS selector strings via raw strings (causing error print statements during program initial launch)
 
 import ModsPacksLibs #Custom Modules
 import pyperclip, re, os, time
@@ -24,8 +21,11 @@ inputRegex = re.compile(r'''(
                         ((\s{1}[A-Z0-9]+)+)
                         )''', re.VERBOSE)
 
-#Dynamically locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
-#TODO: Update with Path module (this is largely unecessary)
+#Ensures program is run in the program file (primarily for IDE use)
+os.chdir(Path(__file__).resolve().parent)
+
+#TODO: Temporarily comment out unpw handling until I have created proper handling for it
+#Locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
 unpwJsonFilepath = Path(__file__).resolve().parents[1] / "CGPT.env"
 load_dotenv(dotenv_path=unpwJsonFilepath)
 username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
@@ -70,49 +70,24 @@ else:
         userInputsDict[inputSlotName] = userInput
         prompt = prompt.replace(fullInputSlot, userInput)
 
-#Open Browser and log in to CGPT, skip past pop-ups, enter prompt, and return result to terminal + copy to user's clipboard
+#Automation to submit prompt to ChatGPT and return response
 #TODO: Minimize/hide browser
 with SB(uc=True) as browser:
-    browser.open('https://chat.openai.com/auth/login')
+    browser.open('https://chatgpt.com/', timeout = 30)
     
-    browser.wait_for_elemeent_visible('#\:r1\:-email').send_keys(username)
-    browser.wait_for_elemeent_visible('#\:r1\: > div._section_1alro_7._ctas_1alro_13 > button').click()
-    browser.wait_for_elemeent_visible('#\:re\:-current-password').send_keys(password)
-    browser.wait_for_elemeent_visible('#\:re\: > div._section_1alro_7._ctas_1alro_13 > button').click()
+    #Enter prompt and submit
+    browser.wait_for_element_visible('#prompt-textarea > p', timeout=30)
+    browser.set_text('#prompt-textarea > p', prompt, timeout=20)
+    browser.wait_for_element_clickable('#composer-submit-button', timeout=20)
+    browser.click('#composer-submit-button', timeout=20)
 
-'''    codeInput = ModsPacksLibs.MultiSelectorSearch.multi_selector_search(browser, ['#\:r15\:-code'])
-    print(f'Yahoo itsa: {codeInput}!')'''
+    #Copy response
+    # - Solution uses a bit of a workaround. The original solution was simply to click the copy response button, but it seems that there is some security implementation preventing me from doing this so easily. As a workaround, I am copying the content by pulling in the response content directly, rather than relying on ChatGPT's conveniently supplied copy button.
+    
+    #TODO: May want to change back to button-based copy (we will see how versatile this workaround ends up being)
+    # - Selector for button: 'div.flex.min-h-\[46px\].justify-start > div > button[aria-label="Copy"]'
 
-'''browser.wait_for_element_visible('button:nth-child(1)').click()
-            activeUsernameSelector = ModsPacksLibs.multi_selector_search(browser, ['#email-input', '#username'])
-            browser.wait_for_element_visible(activeUsernameSelector).send_keys(username)
-            activeContinueUsernameButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['body > div > main > section > div > div > div > div.c74298dc3.c0ee5daba > div > form > div.c90212864 > button',  'continue-btn', '#root > div > main > section > div.login-container > button'])
-            browser.wait_for_element_visible(activeContinueUsernameButtonSelector).click()
-            browser.wait_for_element_visible('#password').send_keys(password)
-            activePasswordContinueButtonSelector = ModsPacksLibs.multi_selector_search(browser, ['#radix-\:rh\: > div > button', 'body > div.oai-wrapper > main > section > div > div > div > form > div.c90212864 > button', '#submit'])
-            browser.wait_for_element_visible(activePasswordContinueButtonSelector).click()
-            browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
-        
-            try: #Tests for pre/auto-login
-            browser.wait_for_element_visible('#prompt-textarea', timeout=10).send_keys(prompt)
-        except seleniumbase.common.exceptions.NoSuchElementException: #Login loop, if not pre/auto-login
-            try:
-            except seleniumbase.common.exceptions.NoSuchElementException:
-                raise
-    activePromptSubmitButton = ModsPacksLibs.multi_selector_search(browser,
-                                                   ['#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\:pt-0.dark\:border-white\/20.md\:border-transparent.md\:dark\:border-transparent.md\:w-\[calc\(100\%-\.5rem\)\] > form > div > div.flex.w-full.items-center > div > button',
-                                                    'div.group.w-full.text-token-text-primary.border-b.border-black\/10.dark\:border-gray-900\/50.bg-gray-50.dark\:bg-\[\#444654\] > div > div > div.relative.flex.w-\[calc\(100\%-50px\)\].flex-col.gap-1.md\:gap-3.lg\:w-\[calc\(100\%-115px\)\] > div.flex.justify-between.lg\:block > div.text-gray-400.flex.self-end.lg\:self-center.justify-center.mt-2.gap-2.md\:gap-3.lg\:gap-1.lg\:absolute.lg\:top-0.lg\:translate-x-full.lg\:right-0.lg\:mt-0.lg\:pl-2.visible > button',
-                                                    '#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\:pt-0.dark\:border-white\/20.md\:border-transparent.md\:dark\:border-transparent.md\:w-\[calc\(100\%-\.5rem\)\] > form > div > div.flex.w-full.items-center > div > button'
-                                                    ]
-                                                    )
-    browser.wait_for_element_visible(activePromptSubmitButton).click()
-    copyResponseButtonSelector = ModsPacksLibs.multi_selector_search(browser, 
-                                                    ['#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div > div > div:nth-child(3) > div > div > div.relative.flex.w-full.flex-col.agent-turn > div.flex-col.gap-1.md\:gap-3 > div.mt-1.flex.justify-start.gap-3.empty\:hidden > div > span:nth-child(1) > button',
-                                                    '#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div > div > div > div:nth-child(3) > div > div > div.relative.flex.w-full.flex-col.agent-turn > div.flex-col.gap-1.md\:gap-3 > div.mt-1.flex.gap-3.empty\:hidden > div > span > button'
-                                                    ],
-                                                    moduleTimeout=300
-                                                    )
-    browser.wait_for_element_clickable(copyResponseButtonSelector).click()
+    browser.wait_for_element_clickable(r'div.flex.min-h-\[46px\].justify-start > div > button[aria-label="Copy"]', timeout=30)
+    response = browser.get_text(r'div[class="markdown prose dark:prose-invert w-full break-words dark markdown-new-styling"]')
 
-print('\nResponse copied to clipboard\n------------------------------')
-print(pyperclip.paste(), '\n')'''
+print(f'\nResponse copied to clipboard\n------------------------------\n{response}\n')
