@@ -41,9 +41,11 @@ Installation
         - Click the green "code" button > "Download ZIP"
         - Save the ZIP somewhere on your device locally (icloud or similar cloud-based storage directories will not work)
     2. Unzip the file.
-    3. Open Terminal/Powershell/etc. and run the following command(s) within the "...":
+    3. Open Terminal/Powershell/etc.
+    4. Navigate into program directory with "cd" command.
+    5. Run the following command: 
 
-        " pip3 install pyperclip==1.9.0 pyinputplus==0.2.12 undetected_chromedriver==3.5.5 seleniumbase==4.40.6 python-dotenv==1.1.1 "
+        "pip install -r requirements.txt"
 
 Setup
 

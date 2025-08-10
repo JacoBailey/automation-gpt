@@ -4,7 +4,6 @@
 #TODO: Create tests for multi_selector_search
 #TODO: Update program to handle user login + specific chat selection
 #TODO: Download all necessary packages upon program download/initiation
-#TODO: Ensure specific module/lib versions are chosen in requirements for added stability (update to current, then set specific version)
 #TODO: Add docstrings to all classes, functions, etc.
 #TODO: Fix formatting/escaping issue with CSS selector strings via raw strings (causing error print statements during program initial launch)
 
