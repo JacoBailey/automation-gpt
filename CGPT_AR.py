@@ -70,6 +70,8 @@ else:
             break
         userInputsDict[inputSlotName] = userInput
         prompt = prompt.replace(fullInputSlot, userInput)
+        pyperclip.copy(prompt)
+        print(f'\Prompt copied to clipboard\n------------------------------\n{prompt}\n')
 
 #Automation to submit prompt to ChatGPT and return response
 #TODO: Minimize/hide browser
@@ -90,5 +92,6 @@ with SB(uc=True) as browser:
 
     browser.wait_for_element_clickable(r'div.flex.min-h-\[46px\].justify-start > div > button[aria-label="Copy"]', timeout=30)
     response = browser.get_text(r'div[class="markdown prose dark:prose-invert w-full break-words dark markdown-new-styling"]')
+    pyperclip.copy(response)
 
 print(f'\nResponse copied to clipboard\n------------------------------\n{response}\n')
