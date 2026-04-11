@@ -31,10 +31,11 @@ load_dotenv(dotenv_path=unpwJsonFilepath)
 username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
 '''
 
+print('- - - - - - - - - - -\n- ChatGPT Automation -\n- - - - - - - - - - -')
+
 #Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
 #TODO: Convert all logic below to module?
 templateFolderLocation = Path(__file__).resolve().parent / 'Templates'
-print(templateFolderLocation)
 templateNamesList = []
 walkObj = ModsPacksLibs.walkSimple.walk_simple(templateFolderLocation)
 fileNames = walkObj.files
@@ -71,7 +72,7 @@ else:
         userInputsDict[inputSlotName] = userInput
         prompt = prompt.replace(fullInputSlot, userInput)
         pyperclip.copy(prompt)
-        print(f'\Prompt copied to clipboard\n------------------------------\n{prompt}\n')
+        print(f'\nPrompt copied to clipboard\n------------------------------\n{prompt}\n')
 
 #Automation to submit prompt to ChatGPT and return response
 #TODO: Minimize/hide browser
