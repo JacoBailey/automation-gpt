@@ -1,12 +1,6 @@
 #CHAT GPT AUTO RESPONSE
 #!python3
 
-#TODO: Create tests for multi_selector_search
-#TODO: Update program to handle user login + specific chat selection
-#TODO: Download all necessary packages upon program download/initiation
-#TODO: Add docstrings to all classes, functions, etc.
-#TODO: Fix formatting/escaping issue with CSS selector strings via raw strings (causing error print statements during program initial launch)
-
 import ModsPacksLibs #Custom Modules
 import pyperclip, re, os, time
 import pyinputplus as pyip
@@ -15,69 +9,67 @@ from pathlib import Path
 from seleniumbase import SB
 from dotenv import load_dotenv
 
-inputRegex = re.compile(r'''(
+input_pattern = re.compile(r'''(
                         (INSERT{1})
                         ((\s{1}[A-Z0-9]+)+)
                         )''', re.VERBOSE)
+class NoTextFilesError(Exception):
+    """Raised when no textfiles are found in a directory."""
+    pass
 
-#Ensures program is run in the program file (primarily for IDE use)
+class TemplateHasNoInputsError(Exception):
+    """Raised when no input slots are found in template file."""
+    pass
+
+# Ensures program is run in the program file (primarily for IDE use)
 os.chdir(Path(__file__).resolve().parent)
 
-#Temporarily commented out unpw handling until I have created proper handling for it
-'''
-#Locate progFileDirectory for user-supplied CGPT UN/PW and add UN/PW to program as individual variables
-unpwJsonFilepath = Path(__file__).resolve().parents[1] / "CGPT.env"
-load_dotenv(dotenv_path=unpwJsonFilepath)
-username, password = os.getenv("USERNAME"), os.getenv("PASSWORD")
-'''
-
+# Main program start + print program name
 print('- - - - - - - - - - -\n- ChatGPT Automation -\n- - - - - - - - - - -')
 
-#Dynamically locate and read all user-supplied prompt template files and add their names to a list (list will be used with a menu to ask user to pick a template)
-#TODO: Convert all logic below to module?
-templateFolderLocation = Path(__file__).resolve().parent / 'Templates'
-templateNamesList = []
-walkObj = ModsPacksLibs.walkSimple.walk_simple(templateFolderLocation)
-fileNames = walkObj.files
-for fileName in fileNames:
-        if Path(fileName).suffix != '.txt':
-                continue
-        else:
-            templateNamesList.append(fileName)
-if templateNamesList == []:
-    raise Exception('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory before re-running the program.')
+# Locate all user-supplied prompt template file and add their files to a list
+# - If there are no prompt files, it returns an exception
+template_dir = Path(__file__).resolve().parent / 'Templates'
+walk_obj = ModsPacksLibs.walkSimple.walk_simple(template_dir)
+files = walk_obj.files
+template_list = []
+for file in files:
+    if Path(file).suffix != '.txt':
+        continue
+    else:
+        template_list.append(file)
+if not template_list:
+    raise NoTextFilesError('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory.')
 
-#Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
-#If there is only one prompt, it selects the prompt
-#If there are no prompts, it returns an exception
-if len(templateNamesList) > 1:
-    selectedTemplateName = pyip.inputMenu(templateNamesList, numbered = True)
+# Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
+# - If there is only one prompt, it selects that prompt
+if len(template_list) > 1:
+    template_name = pyip.inputMenu(template_list, numbered = True)
 else:
-    selectedTemplateName = templateNamesList[0]
-selectedTemplate = os.path.join(templateFolderLocation, selectedTemplateName)
+    template_name = template_list[0]
+template = Path(template_dir) / template_name
 
-#Locate prompt input locations, have the user supply inputs, & fill in the prompt with the user-supplied inputs
-prompt = Path(selectedTemplate).read_text(encoding='utf8')
-templateInputSlots = inputRegex.findall(prompt) #TODO: Ensure a non-matched regex is handled
-userInputsDict = {}
-if templateInputSlots == ['']:
-    print(f'No inputs found in \'{selectedTemplateName}\' file.{time.sleep(2)}\nProgram will continue without inputs.{time.sleep(2)}\nIf you would like to add inputs, please do so according to the program documentation/README.{time.sleep(2)}')
-else:
-    for inputSlot in range(len(templateInputSlots)):
-        fullInputSlot = templateInputSlots[inputSlot][0]
-        inputSlotName = templateInputSlots[inputSlot][2]
-        while True:
-            userInput = ModsPacksLibs.inputCorrectValidation(f'Please enter an input for: {inputSlotName}', inputSlotName)
-            break
-        userInputsDict[inputSlotName] = userInput
-        prompt = prompt.replace(fullInputSlot, userInput)
-        pyperclip.copy(prompt)
-        print(f'\nPrompt copied to clipboard\n------------------------------\n{prompt}\n')
+# template fill logic loop
+prompt = Path(template).read_text(encoding='utf8')
+match = re.search(input_pattern, prompt)
+if match is None:
+    raise TemplateHasNoInputsError('No input slots found in user-selected template.')
+while match is not None:
+    slot = match.group().removeprefix('INSERT ')
+    replacement = ModsPacksLibs.inputCorrectValidation(f'Please enter an input for: {slot}.', slot)
+    prompt = re.sub(input_pattern, replacement, prompt, count=1)
+    match = re.search(input_pattern, prompt)
+
+# Copy completed prompt to clipboard and print
+# - This copy functions as a backup incase automation fails
+pyperclip.copy(prompt)
+print('Prompt copied to clipboard.')
+time.sleep(1)
+print('Starting automation.')
 
 #Automation to submit prompt to ChatGPT and return response
-#TODO: Minimize/hide browser
 with SB(uc=True) as browser:
-    browser.open('https://chatgpt.com/', timeout = 30)
+    browser.open('https://chatgpt.com/', timeout=30)
     
     #Enter prompt and submit
     browser.wait_for_element_visible('#prompt-textarea > p', timeout=30)
