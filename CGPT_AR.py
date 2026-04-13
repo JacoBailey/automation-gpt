@@ -32,9 +32,7 @@ walk_obj = ModsPacksLibs.walkSimple.walk_simple(template_dir)
 files = walk_obj.files
 template_list = []
 for file in files:
-    if Path(file).suffix != '.txt':
-        continue
-    else:
+    if Path(file).suffix == '.txt':
         template_list.append(file)
 if not template_list:
     raise NoTextFilesError('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory.')
