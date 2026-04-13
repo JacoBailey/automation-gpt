@@ -18,6 +18,10 @@ class NoTextFilesError(Exception):
 class TemplateHasNoInputsError(Exception):
     """Raised when no input slots are found in template file."""
     pass
+class Selectors:
+    textarea_input = 'textarea[name*="prompt"]'
+    submit_button = '#composer-submit-button'
+    copy_button = 'button[aria-label="Copy response"]'
 
 # Ensures program is run in the program file (primarily for IDE use)
 os.chdir(Path(__file__).resolve().parent)
@@ -57,13 +61,7 @@ while match is not None:
     match = re.search(input_pattern, prompt)
 
 #Automation to submit prompt to ChatGPT and return response
-class Selectors:
-    textarea_input = 'textarea[name*="prompt"]'
-    submit_button = '#composer-submit-button'
-    copy_button = 'button[aria-label="Copy response"]'
-
 print('Starting automation.')
-
 try:
     with SB(uc=True) as browser:
         # open site + browser
