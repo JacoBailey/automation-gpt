@@ -56,31 +56,35 @@ while match is not None:
     prompt = re.sub(input_pattern, replacement, prompt, count=1)
     match = re.search(input_pattern, prompt)
 
-# Copy completed prompt to clipboard and print
-# - This copy functions as a backup incase automation fails
-pyperclip.copy(prompt)
-print('Prompt copied to clipboard.\nStarting automation.')
-
 #Automation to submit prompt to ChatGPT and return response
 class Selectors:
     textarea_input = 'textarea[name*="prompt"]'
     submit_button = '#composer-submit-button'
     copy_button = 'button[aria-label="Copy response"]'
 
-with SB(uc=True) as browser:
-    # open site + browser
-    browser.open('https://chatgpt.com/', timeout=15)
-    
-    # enter text into textarea box
-    browser.wait_for_element_visible(Selectors.textarea_input, timeout=15)
-    browser.type(Selectors.textarea_input, prompt, timeout=15)
-    
-    # click submit button
-    browser.wait_for_element_clickable(Selectors.submit_button, timeout=15)
-    browser.hover_and_click(Selectors.submit_button, Selectors.submit_button, timeout=15) # click submit button
+print('Starting automation.')
 
-    # click button to copy response
-    browser.wait_for_element_clickable(Selectors.copy_button, timeout=120)
-    browser.hover_and_click(Selectors.copy_button, Selectors.copy_button, timeout=30)
+try:
+    with SB(uc=True) as browser:
+        # open site + browser
+        browser.open('https://chatgpt.com/', timeout=15)
+        
+        # enter text into textarea box
+        browser.wait_for_element_visible(Selectors.textarea_input, timeout=15)
+        browser.type(Selectors.textarea_input, prompt, timeout=15)
+        
+        # click submit button
+        browser.wait_for_element_clickable(Selectors.submit_button, timeout=15)
+        browser.hover_and_click(Selectors.submit_button, Selectors.submit_button, timeout=15) # click submit button
 
-print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
+        # click button to copy response
+        browser.wait_for_element_clickable(Selectors.copy_button, timeout=120)
+        browser.hover_and_click(Selectors.copy_button, Selectors.copy_button, timeout=30)
+    
+    print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
+
+except Exception as error:
+    pyperclip.copy(prompt)
+    print (f'Automation crashed.\nError: {error}\nManual fallback initiated.')
+    print (f'----------\n{prompt}\n----------')
+    print ('Prompt has been printed above and copied to clipboard for manual submission to ChatGPT.')
