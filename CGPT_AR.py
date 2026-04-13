@@ -80,7 +80,10 @@ try:
 
         # click button to copy response
         browser.wait_for_element_visible(Selectors.COPY, timeout=120)
+        browser.scroll_to(Selectors.COPY, timeout=30)
+        browser.sleep(0.5)
         browser.hover_and_click(Selectors.COPY, Selectors.COPY, timeout=30)
+        browser.sleep(1)
     
     print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
 
