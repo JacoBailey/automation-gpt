@@ -63,28 +63,28 @@ while match is not None:
 # Copy completed prompt to clipboard and print
 # - This copy functions as a backup incase automation fails
 pyperclip.copy(prompt)
-print('Prompt copied to clipboard.')
-time.sleep(1)
-print('Starting automation.')
+print('Prompt copied to clipboard.\nStarting automation.')
 
 #Automation to submit prompt to ChatGPT and return response
+class Selectors:
+    textarea_input = 'textarea[name*="prompt"]'
+    submit_button = '#composer-submit-button'
+    copy_button = 'button[aria-label="Copy response"]'
+
 with SB(uc=True) as browser:
-    browser.open('https://chatgpt.com/', timeout=30)
+    # open site + browser
+    browser.open('https://chatgpt.com/', timeout=15)
     
-    #Enter prompt and submit
-    browser.wait_for_element_visible('#prompt-textarea > p', timeout=30)
-    browser.set_text('#prompt-textarea > p', prompt, timeout=20)
-    browser.wait_for_element_clickable('#composer-submit-button', timeout=20)
-    browser.click('#composer-submit-button', timeout=20)
-
-    #Copy response
-    # - Solution uses a bit of a workaround. The original solution was simply to click the copy response button, but it seems that there is some security implementation preventing me from doing this so easily. As a workaround, I am copying the content by pulling in the response content directly, rather than relying on ChatGPT's conveniently supplied copy button.
+    # enter text into textarea box
+    browser.wait_for_element_visible(Selectors.textarea_input, timeout=15)
+    browser.type(Selectors.textarea_input, prompt, timeout=15)
     
-    #TODO: May want to change back to button-based copy (we will see how versatile this workaround ends up being)
-    # - Selector for button: 'div.flex.min-h-\[46px\].justify-start > div > button[aria-label="Copy"]'
+    # click submit button
+    browser.wait_for_element_clickable(Selectors.submit_button, timeout=15)
+    browser.hover_and_click(Selectors.submit_button, Selectors.submit_button, timeout=15) # click submit button
 
-    browser.wait_for_element_clickable(r'div.flex.min-h-\[46px\].justify-start > div > button[aria-label="Copy"]', timeout=30)
-    response = browser.get_text(r'div[class="markdown prose dark:prose-invert w-full break-words dark markdown-new-styling"]')
-    pyperclip.copy(response)
+    # click button to copy response
+    browser.wait_for_element_clickable(Selectors.copy_button, timeout=120)
+    browser.hover_and_click(Selectors.copy_button, Selectors.copy_button, timeout=30)
 
-print(f'\nResponse copied to clipboard\n------------------------------\n{response}\n')
+print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
