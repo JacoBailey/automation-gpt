@@ -19,9 +19,9 @@ class TemplateHasNoInputsError(Exception):
     """Raised when no input slots are found in template file."""
     pass
 class Selectors:
-    textarea_input = 'textarea[name*="prompt"]'
-    submit_button = '#composer-submit-button'
-    copy_button = 'button[aria-label="Copy response"]'
+    TEXTAREA = 'textarea[name*="prompt"]'
+    SUBMIT = '#composer-submit-button'
+    COPY = 'button[aria-label="Copy response"]'
 
 # Ensures program is run in the program file (primarily for IDE use)
 os.chdir(Path(__file__).resolve().parent)
@@ -51,14 +51,17 @@ template = Path(template_dir) / template_name
 
 # template fill logic loop
 prompt = Path(template).read_text(encoding='utf8')
-match = re.search(input_pattern, prompt)
-if match is None:
+matches = list(re.finditer(input_pattern, prompt))
+if not matches:
     raise TemplateHasNoInputsError('No input slots found in user-selected template.')
-while match is not None:
+total = len(matches)
+
+for count, match in enumerate(matches, start=1):
+    print(f'Input: {count} / {total}')
     slot = match.group().removeprefix('INSERT ')
     replacement = ModsPacksLibs.inputCorrectValidation(f'Please enter an input for: {slot}.', slot)
     prompt = re.sub(input_pattern, replacement, prompt, count=1)
-    match = re.search(input_pattern, prompt)
+print('Replacements complete.')
 
 #Automation to submit prompt to ChatGPT and return response
 print('Starting automation.')
@@ -68,16 +71,16 @@ try:
         browser.open('https://chatgpt.com/', timeout=15)
         
         # enter text into textarea box
-        browser.wait_for_element_visible(Selectors.textarea_input, timeout=15)
-        browser.type(Selectors.textarea_input, prompt, timeout=15)
+        browser.wait_for_element_visible(Selectors.TEXTAREA, timeout=15)
+        browser.type(Selectors.TEXTAREA, prompt, timeout=15)
         
         # click submit button
-        browser.wait_for_element_clickable(Selectors.submit_button, timeout=15)
-        browser.hover_and_click(Selectors.submit_button, Selectors.submit_button, timeout=15) # click submit button
+        browser.wait_for_element_clickable(Selectors.SUBMIT, timeout=15)
+        browser.hover_and_click(Selectors.SUBMIT, Selectors.SUBMIT, timeout=15) # click submit button
 
         # click button to copy response
-        browser.wait_for_element_clickable(Selectors.copy_button, timeout=120)
-        browser.hover_and_click(Selectors.copy_button, Selectors.copy_button, timeout=30)
+        browser.wait_for_element_visible(Selectors.COPY, timeout=120)
+        browser.hover_and_click(Selectors.COPY, Selectors.COPY, timeout=30)
     
     print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
 
