@@ -2,12 +2,10 @@
 #!python3
 
 import ModsPacksLibs #Custom Modules
-import pyperclip, re, os, time
+import pyperclip, re, os
 import pyinputplus as pyip
-import seleniumbase
 from pathlib import Path
 from seleniumbase import SB
-from dotenv import load_dotenv
 
 input_pattern = re.compile(r'''(
                         (INSERT{1})
