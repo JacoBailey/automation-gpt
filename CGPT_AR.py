@@ -1,7 +1,7 @@
 #CHAT GPT AUTO RESPONSE
 #!python3
 
-import ModsPacksLibs #Custom Modules
+import utils #Custom Modules
 import pyperclip, re, os
 import pyinputplus as pyip
 from pathlib import Path
@@ -31,15 +31,15 @@ print('- - - - - - - - - - -\n- ChatGPT Automation -\n- - - - - - - - - - -')
 
 # Locate all user-supplied prompt template file and add their files to a list
 # - If there are no prompt files, it returns an exception
-template_dir = Path(__file__).resolve().parent / 'Templates'
-walk_obj = ModsPacksLibs.walkSimple.walk_simple(template_dir)
+template_dir = Path(__file__).resolve().parent / 'templates'
+walk_obj = utils.SimpleDirWalk(template_dir)
 files = walk_obj.files
 template_list = []
 for file in files:
     if Path(file).suffix == '.txt':
         template_list.append(file)
 if not template_list:
-    raise NoTextFilesError('No textfile templates found in the \'Templates\' folder. Please add a textfile prompt to the \'Templates\' directory.')
+    raise NoTextFilesError('No textfile templates found in the \'templates\' folder. Please add a textfile prompt to the \'Templates\' directory.')
 
 # Ask the user to select a prompt to use from the prompt list, then read and save the prompt's contents
 # - If there is only one prompt, it selects that prompt
@@ -59,7 +59,7 @@ total = len(matches)
 for count, match in enumerate(matches, start=1):
     print(f'Input: {count} / {total}')
     slot = match.group().removeprefix('INSERT ')
-    replacement = ModsPacksLibs.inputCorrectValidation(f'Please enter an input for: {slot}.', slot)
+    replacement = utils.confirm_input(f'Please enter an input for: {slot}.', slot)
     prompt = re.sub(input_pattern, replacement, prompt, count=1)
 print('Replacements complete.')
 
