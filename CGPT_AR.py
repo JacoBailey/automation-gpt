@@ -70,13 +70,10 @@ try:
         # open site + browser
         browser.open('https://chatgpt.com/', timeout=15)
         
-        # enter text into textarea box
+        # enter text into textarea box and submit
         browser.wait_for_element_visible(Selectors.TEXTAREA, timeout=15)
         browser.type(Selectors.TEXTAREA, prompt, timeout=15)
-        
-        # click submit button
-        browser.wait_for_element_clickable(Selectors.SUBMIT, timeout=15)
-        browser.hover_and_click(Selectors.SUBMIT, Selectors.SUBMIT, timeout=15) # click submit button
+        browser.type(Selectors.TEXTAREA, '\n', timeout=15) # newline is equivalent to enter key (doesn't work with prompt concat, needs separate statement)
 
         # click button to copy response
         browser.wait_for_element_visible(Selectors.COPY, timeout=120)
@@ -84,11 +81,11 @@ try:
         browser.sleep(0.5)
         browser.hover_and_click(Selectors.COPY, Selectors.COPY, timeout=30)
         browser.sleep(1)
-    
-    print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
 
 except Exception as error:
     pyperclip.copy(prompt)
     print (f'Automation crashed.\nError: {error}\nManual fallback initiated.')
     print (f'----------\n{prompt}\n----------')
     print ('Prompt has been printed above and copied to clipboard for manual submission to ChatGPT.')
+
+print(f'Response copied to clipboard.\n------------------------------\n{pyperclip.paste()}')
