@@ -29,21 +29,26 @@ This tool automates repetitive ChatGPT workflows via user-provided templates, si
 ## Features
 
 ### Current Features
+
 - Custom user-provided templates
 - Simple syntax for template inputs
 - Automated prompt submission and response retrieval
 
 ### Planned Features
+
 - Multi-message conversation support
 
-## Installation
+## Program Setup
+
 This setup assumes have Python installed on your machine. If not, please install Python prior to performing the setup steps below.
+
+### Installation
 
 1. Clone or download the repository
 2. Navigate into the project directory
 3. Install dependencies (TBD)
 
-## Setup
+### Setup
 
 1. Open the program file (should be named 'automation-gpt-main')
 2. Open the "templates" folder (where your prompt templates will be stored)
@@ -55,7 +60,8 @@ This setup assumes have Python installed on your machine. If not, please install
 
 Run the program:
 
-```python3 chatgpt_prompt_automation.py
+```bash
+python3 chatgpt_prompt_automation.py
 ```
 
 You may also run the program via a Bash or shell script.
